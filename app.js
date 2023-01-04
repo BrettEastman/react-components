@@ -41,36 +41,51 @@
 
 ///
 
-// const props = (groceryItems: ['coffee', 'bagels'])
 
 // traditional "structured" way to write it:
 // const GroceryListItem = (props) => (
-//   <li>{props.groc}</li>
+//   <li>{props.grocery}</li>
 // )
 
 // more common "destructured" way to write it
-const GroceryListItem = ({groc}) => (
-  <li>{groc}</li>
-)
+const GroceryListItem = ({ grocery }) => {
+  const [isCrossed, setIsCrossed] = React.useState(false); // means that it is false that it "is crossed" the first time - the initial value
+  const [isBold, setIsBold] = React.useState(false);
 
-const GroceryList = () => {
+  const style = {
+    textDecoration: isCrossed ? 'line-through' : 'none',
+    fontWeight: isBold ? 'bold' : 'normal'
+  }
+  return <li
+           style={style}
+           onClick={() => setIsCrossed(!isCrossed)}
+           onMouseEnter={() => setIsBold(true)}
+           onMouseLeave={() => setIsBold(false)}
+        >
+          {grocery}
+          </li>
+}
 
-  let groceryItems = ['coffee', 'bagels'];
 
+const GroceryList = (props) => {
+  const { items } = props;
   return (
   <ul>
-    {groceryItems.map((groc) => (
-      <GroceryListItem groc={groc} /> // setting up a props object, with key of groc. Could set up more properties. The first groc is the key, and the 2nd groc in curly braces is the variable
+    {items.map((item) => (
+      <GroceryListItem grocery={item} /> // setting up a props object, with key of groc. Could set up more properties. The first groc is the key, and the 2nd groc in curly braces is the variable. If I added GroceryListItem color={red} for example, then color would be another key on props.
     ))}
   </ul>
   )
 };
 
-const App = () => (
-  <div>Some cliche salutation
-    <h2>Grocery List</h2>
-    <GroceryList />
-  </div>
-)
+const App = () => {
+  let groceryItems = ['coffee', 'bagels', 'funyuns', 'chocolate'];
+  return (
+    <div>Some cliche salutation
+      <h2>Grocery List</h2>
+      <GroceryList items={groceryItems}/>
+    </div>
+  )
+}
 
 ReactDOM.render(<App />, document.getElementById("app"));
